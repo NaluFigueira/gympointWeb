@@ -9,6 +9,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@rocketseat/unform": "^1.6.1",
+    "babel-loader": "^8.0.6",
     "history": "^4.10.1",
     "polished": "^3.4.2",
     "prop-types": "^15.7.2",
@@ -18,7 +20,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "react-toastify": "^5.5.0",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "yup": "^0.28.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
