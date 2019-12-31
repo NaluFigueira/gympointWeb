@@ -1,22 +1,19 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import { Router } from 'react-router-dom';
+
+import Routes from './routes';
+import history from './services/history';
+
+import GlobalStyle from './styles/global';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={history}>
+      <Routes />
+      <GlobalStyle />
+      <ToastContainer autoClose={3000} />
+    </Router>
   );
 }
 
