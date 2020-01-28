@@ -1,131 +1,95 @@
 import React from 'react';
 
-import { MdSearch, MdEdit, MdDelete } from 'react-icons/md';
+import ActionsContainer from '~/components/ActionsContainer';
+import Table from '~/components/Table';
 
-import Button from '~/components/Button';
-
-import {
-  Container,
-  ActionsContainer,
-  SearchBar,
-  TableContainer,
-} from './styles';
+import { Container } from './styles';
 
 export default function StudentsList() {
   return (
     <Container>
-      <ActionsContainer>
-        <h2>Gerenciando alunos</h2>
-
-        <SearchBar>
-          <Button title="Cadastrar" type="Action" />
-
-          <div>
-            <MdSearch
-              style={{
-                color: '#444444',
-                position: 'absolute',
-                marginLeft: 10,
-                height: 18,
-                width: 18,
-              }}
-            />
-            <input type="text" placeholder="Buscar aluno" />
-          </div>
-        </SearchBar>
-      </ActionsContainer>
-      <TableContainer>
-        <table>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Idade</th>
-            <th>
-              <MdEdit />
-            </th>
-            <th>
-              <MdDelete />
-            </th>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-          <tr>
-            <td>Cha Ji-Hun</td>
-            <td>example@rocketseat.com.br</td>
-            <td>20</td>
-            <td>editar</td>
-            <td>apagar</td>
-          </tr>
-        </table>
-      </TableContainer>
+      <ActionsContainer type="aluno" />
+      <Table
+        headers={[
+          { Id: 0, Name: 'Nome' },
+          { Id: 1, Name: 'E-mail' },
+          { Id: 2, Name: 'Idade' },
+        ]}
+        data={[
+          {
+            Id: 0,
+            Nome: 'Cha Ji-Hun',
+            Email: 'example@rocketseat.com.br',
+            Idade: 20,
+          },
+          {
+            Id: 1,
+            Nome: 'Darius Cummings',
+            Email: 'example@rocketseat.com.br',
+            Idade: 18,
+          },
+          {
+            Id: 2,
+            Nome: 'Carmelita Marsham',
+            Email: 'example@rocketseat.com.br',
+            Idade: 32,
+          },
+          {
+            Id: 3,
+            Nome: 'Cha Ji-Hun',
+            Email: 'example@rocketseat.com.br',
+            Idade: 20,
+          },
+          {
+            Id: 4,
+            Nome: 'Darius Cummings',
+            Email: 'example@rocketseat.com.br',
+            Idade: 18,
+          },
+          {
+            Id: 5,
+            Nome: 'Carmelita Marsham',
+            Email: 'example@rocketseat.com.br',
+            Idade: 32,
+          },
+          {
+            Id: 6,
+            Nome: 'Cha Ji-Hun',
+            Email: 'example@rocketseat.com.br',
+            Idade: 20,
+          },
+          {
+            Id: 7,
+            Nome: 'Darius Cummings',
+            Email: 'example@rocketseat.com.br',
+            Idade: 18,
+          },
+          {
+            Id: 8,
+            Nome: 'Carmelita Marsham',
+            Email: 'example@rocketseat.com.br',
+            Idade: 32,
+          },
+          {
+            Id: 9,
+            Nome: 'Cha Ji-Hun',
+            Email: 'example@rocketseat.com.br',
+            Idade: 20,
+          },
+          {
+            Id: 10,
+            Nome: 'Darius Cummings',
+            Email: 'example@rocketseat.com.br',
+            Idade: 18,
+          },
+          {
+            Id: 11,
+            Nome: 'Carmelita Marsham',
+            Email: 'example@rocketseat.com.br',
+            Idade: 32,
+          },
+        ]}
+      />
     </Container>
   );
 }

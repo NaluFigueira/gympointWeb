@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
+import Colors from '~/styles/colors';
+
 export const StyledButton = styled.button`
   background-color: ${props =>
-    props.type === 'Action' ? '#EE4D64' : '#CCCCCC'};
+    props.type === 'Action' ? Colors.primary : '#CCCCCC'};
   color: white;
   border: none;
   text-transform: uppercase;

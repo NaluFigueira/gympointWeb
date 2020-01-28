@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 import { darken } from 'polished';
 
+import Colors from '~/styles/colors';
+
 export const Wrapper = styled.div`
   height: 100%;
-  background: #ee4d64;
+  background: ${Colors.primary};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +39,7 @@ export const Content = styled.div`
         border-radius: 4px;
         height: 45px;
         padding: 0 15px;
-        color: #999;
+        color: ${Colors.secondary};
         width: 100%;
         margin: 10px 0 20px 0;
 

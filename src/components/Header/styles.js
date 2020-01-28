@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import Colors from '~/styles/colors';
+
 export const Container = styled.div`
   height: 64px;
   background-color: white;
@@ -23,7 +25,7 @@ export const Menu = styled.div`
 `;
 
 export const MenuItem = styled.li`
-  color: ${props => (props.selected ? '#444' : '#999')};
+  color: ${props => (props.selected ? '#444' : Colors.secondary)};
   padding: 10px;
   font-weight: bold;
   text-transform: uppercase;
