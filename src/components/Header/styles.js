@@ -29,6 +29,10 @@ export const MenuItem = styled.li`
   padding: 10px;
   font-weight: bold;
   text-transform: uppercase;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Divider = styled.div`

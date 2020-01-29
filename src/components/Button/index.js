@@ -5,9 +5,13 @@ import { MdAdd, MdArrowBack } from 'react-icons/md';
 
 import { StyledButton } from './styles';
 
-export default function Button({ title, type }) {
+export default function Button({ title, type, onClick }) {
   return (
-    <StyledButton type={type}>
+    <StyledButton
+      styleType={type}
+      type={type === 'Action' ? 'submit' : 'button'}
+      onClick={onClick}
+    >
       {type === 'Action' ? (
         <MdAdd style={{ marginRight: 10, height: 18, width: 18 }} />
       ) : (
@@ -18,7 +22,12 @@ export default function Button({ title, type }) {
   );
 }
 
+Button.defaultProps = {
+  onClick: () => {},
+};
+
 Button.propTypes = {
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 };

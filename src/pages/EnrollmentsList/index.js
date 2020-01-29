@@ -8,7 +8,7 @@ import { Container } from './styles';
 export default function EnrollmentsList() {
   return (
     <Container>
-      <ActionsContainer type="matrícula" />
+      <ActionsContainer name="matrícula" actionType="list" />
       <Table
         headers={[
           { Id: 0, Name: 'Aluno' },

@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import Colors from '~/styles/colors';
 
 export default createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
@@ -27,6 +28,29 @@ export default createGlobalStyle`
 
   body,input,button{
     font: 14px 'Roboto', sans-serif;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  input{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 45px;
+    padding: 0 15px;
+    color: #444;
+    width: 100%;
+    margin: 10px 0 10px 0;
+  }
+
+  input::placeholder {
+    color: ${Colors.secondary};
   }
 
   a {

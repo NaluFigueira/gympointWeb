@@ -8,13 +8,13 @@ import Button from '~/components/Button';
 
 import { ActionsContainer, SearchBar } from './styles';
 
-export default function ActionBar({ type }) {
+export default function ActionBar({ name, onClick }) {
   return (
     <ActionsContainer>
-      <h2>Gerenciando {type}s</h2>
+      <h2>Gerenciando {name}s</h2>
 
       <SearchBar>
-        <Button title="Cadastrar" type="Action" />
+        <Button title="Cadastrar" type="Action" onClick={onClick} />
 
         <div>
           <MdSearch
@@ -26,13 +26,18 @@ export default function ActionBar({ type }) {
               width: 18,
             }}
           />
-          <input type="text" placeholder={`Buscar ${type}`} />
+          <input type="text" placeholder={`Buscar ${name}`} />
         </div>
       </SearchBar>
     </ActionsContainer>
   );
 }
 
+ActionBar.defaultProps = {
+  onClick: () => {},
+};
+
 ActionBar.propTypes = {
-  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 };

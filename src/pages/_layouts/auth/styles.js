@@ -26,29 +26,6 @@ export const Content = styled.div`
     align-items: left;
     margin-top: 30px;
 
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      font-weight: bold;
-      text-transform: uppercase;
-      color: #444;
-
-      input {
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        height: 45px;
-        padding: 0 15px;
-        color: ${Colors.secondary};
-        width: 100%;
-        margin: 10px 0 20px 0;
-
-        &::placeholder {
-          color: #444444;
-        }
-      }
-    }
-
     span {
       color: #f64c75;
       align-self: flex-start;

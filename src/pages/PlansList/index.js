@@ -10,7 +10,7 @@ import { formatPrice } from '~/util/format';
 export default function PlansList() {
   return (
     <Container>
-      <ActionsContainer type="plano" />
+      <ActionsContainer name="plano" actionType="list" />
       <Table
         headers={[
           { Id: 0, Name: 'Título' },

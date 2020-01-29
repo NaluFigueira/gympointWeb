@@ -3,12 +3,17 @@ import React from 'react';
 import ActionsContainer from '~/components/ActionsContainer';
 import Table from '~/components/Table';
 
+import history from '~/services/history';
+
 import { Container } from './styles';
 
 export default function StudentsList() {
   return (
     <Container>
-      <ActionsContainer type="aluno" />
+      <ActionsContainer
+        name="aluno"
+        onClick={() => history.push('/student/register')}
+      />
       <Table
         headers={[
           { Id: 0, Name: 'Nome' },
