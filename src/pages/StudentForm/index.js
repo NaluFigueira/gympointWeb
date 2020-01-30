@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
 
 import { Container, ActionsContainer, SearchBar } from './styles';
 
-export default function StudentRegister() {
+export default function StudentForm({ edit }) {
   const [data, setData] = useState({});
 
   const schema = Yup.object().shape({
@@ -23,34 +24,36 @@ export default function StudentRegister() {
   });
 
   useEffect(() => {
-    setData({
-      name: 'Ana',
-      email: 'email@email.com',
-      age: '21',
-      weight: '59.5',
-      height: '1.55',
-    });
-  }, []);
+    if (edit)
+      setData({
+        name: 'Ana',
+        email: 'email@email.com',
+        age: 21,
+        weight: 59.5,
+        height: 1.55,
+      });
+    else setData({});
+  }, [edit]);
 
-  function handleSubmit({ formData }) {
+  function handleSubmit(formData) {
     // eslint-disable-next-line no-console
-    console.log({ formData });
+    console.log(formData);
   }
 
   return (
     <Container>
-      <ActionsContainer>
-        <h2>Cadastro de aluno</h2>
-        <SearchBar>
-          <Button
-            title="Voltar"
-            type="Navigation"
-            onClick={() => history.push('/students')}
-          />
-          <Button title="Salvar" type="Action" />
-        </SearchBar>
-      </ActionsContainer>
       <Form schema={schema} onSubmit={handleSubmit} initialData={data}>
+        <ActionsContainer>
+          {edit ? <h2>Edição de aluno</h2> : <h2>Cadastro de aluno</h2>}
+          <SearchBar>
+            <Button
+              title="Voltar"
+              type="Navigation"
+              onClick={() => history.push('/students')}
+            />
+            <Button title="Salvar" type="submit" />
+          </SearchBar>
+        </ActionsContainer>
         <label htmlFor="name">
           Nome Completo
           <Input name="name" type="text" id="name" placeholder="John Doe" />
@@ -82,3 +85,11 @@ export default function StudentRegister() {
     </Container>
   );
 }
+
+StudentForm.defaultProps = {
+  edit: false,
+};
+
+StudentForm.propTypes = {
+  edit: PropTypes.bool,
+};

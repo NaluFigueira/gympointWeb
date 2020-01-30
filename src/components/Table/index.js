@@ -1,13 +1,15 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 
 import { MdEdit, MdDelete } from 'react-icons/md';
 
 import PropTypes from 'prop-types';
 
-import { TableContainer, Active } from './styles';
+import { Link } from 'react-router-dom';
+import { TableContainer, Active, TableData } from './styles';
 
-export default function Table({ headers, data }) {
-  function isCentered(index) {
+export default function Table({ headers, data, route }) {
+  function isHeaderCentered(index) {
     const item = headers.find(head => head.Id === index);
     if (item) return item.Centered;
     return false;
@@ -40,30 +42,25 @@ export default function Table({ headers, data }) {
               {Object.keys(row).map(
                 (column, index) =>
                   column !== 'Id' && (
-                    <td
+                    <TableData
                       key={row.Id + column}
-                      style={
-                        typeof row[column] === 'boolean'
-                          ? {
-                              textAlign: isCentered(index - 1) ? 'center' : '',
-                              display: 'flex',
-                              justifyContent: 'center',
-                            }
-                          : {
-                              textAlign: isCentered(index - 1) ? 'center' : '',
-                            }
-                      }
+                      textAlignCenter={isHeaderCentered(index - 1)}
+                      contentIsBooleanType={typeof row[column] === 'boolean'}
                     >
                       {typeof row[column] === 'boolean' ? (
                         <Active active={row[column]} />
                       ) : (
                         row[column]
                       )}
-                    </td>
+                    </TableData>
                   )
               )}
-              <td>Editar</td>
-              <td>Apagar</td>
+              <td>
+                <Link to={`${route}/edit`}>Editar</Link>
+              </td>
+              <td>
+                <a>Apagar</a>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -81,4 +78,5 @@ Table.propTypes = {
     })
   ).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  route: PropTypes.string.isRequired,
 };

@@ -14,8 +14,29 @@ export const Container = styled.div`
       justify-content: space-between;
 
       label {
-        width: 25%;
+        width: 20%;
+
+        select {
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          height: 45px;
+          padding: 0 15px;
+          color: #444;
+          width: 100%;
+          margin: 10px 0 10px 0;
+          font: 14px 'Roboto', sans-serif;
+        }
+
+        input[type='date']::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          display: none;
+        }
       }
+    }
+
+    span {
+      color: red;
+      margin-bottom: 20px;
     }
   }
 `;

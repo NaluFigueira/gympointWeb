@@ -31,6 +31,25 @@ export const TableContainer = styled.div`
       border-bottom: 1px solid #eee;
     }
 
+    td {
+      &:nth-last-child(-n + 2) {
+        text-align: center;
+      }
+      &:first-child {
+        min-width: 15vw;
+      }
+      &:nth-last-child(2) {
+        color: #4d85ee;
+      }
+      &:nth-last-child(2) a:visited {
+        color: #4d85ee;
+      }
+      &:nth-last-child(1) {
+        cursor: pointer;
+        color: #de3b3b;
+      }
+    }
+
     th {
       &:nth-last-child(-n + 3) {
         text-align: center;
@@ -39,28 +58,15 @@ export const TableContainer = styled.div`
       font-weight: bold;
       text-transform: uppercase;
     }
-
-    td {
-      &:first-child {
-        min-width: 15vw;
-      }
-      &:nth-last-child(-n + 3) {
-        text-align: center;
-      }
-      &:nth-last-child(-n + 2):hover {
-        cursor: pointer;
-      }
-      &:nth-last-child(2) {
-        color: #4d85ee;
-      }
-      &:nth-last-child(1) {
-        color: #de3b3b;
-      }
-
-      color: #666;
-      padding: 15px 0;
-    }
   }
+`;
+
+export const TableData = styled.td`
+  color: #666;
+  padding: 15px 0;
+  text-align: ${props => (props.textAlignCenter ? 'center' : '')};
+  display: ${props => (props.contentIsBooleanType ? 'flex' : '')};
+  justify-content: ${props => (props.contentIsBooleanType ? 'center' : '')};
 `;
 
 export const Active = styled.div`

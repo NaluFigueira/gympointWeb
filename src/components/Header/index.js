@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Container, Menu, MenuItem, Divider, Profile } from './styles';
 
@@ -8,6 +8,11 @@ import history from '~/services/history';
 
 export default function Header() {
   const [selected, setSelected] = useState('students');
+
+  useEffect(() => {
+    const pathname = history.location.pathname.split('/')[1];
+    setSelected(pathname);
+  }, []);
 
   const handleOnClick = selectedItem => {
     setSelected(selectedItem);
@@ -21,19 +26,19 @@ export default function Header() {
         <Divider />
         <ul>
           <MenuItem
-            selected={selected === 'students'}
+            selected={selected === 'students' || selected === 'student'}
             onClick={() => handleOnClick('students')}
           >
             Alunos
           </MenuItem>
           <MenuItem
-            selected={selected === 'plans'}
+            selected={selected === 'plans' || selected === 'plan'}
             onClick={() => handleOnClick('plans')}
           >
             Planos
           </MenuItem>
           <MenuItem
-            selected={selected === 'enrollments'}
+            selected={selected === 'enrollments' || selected === 'enrollment'}
             onClick={() => handleOnClick('enrollments')}
           >
             Matrículas

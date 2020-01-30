@@ -7,12 +7,8 @@ import { StyledButton } from './styles';
 
 export default function Button({ title, type, onClick }) {
   return (
-    <StyledButton
-      styleType={type}
-      type={type === 'Action' ? 'submit' : 'button'}
-      onClick={onClick}
-    >
-      {type === 'Action' ? (
+    <StyledButton styleType={type} type={type} onClick={onClick}>
+      {type === 'submit' ? (
         <MdAdd style={{ marginRight: 10, height: 18, width: 18 }} />
       ) : (
         <MdArrowBack style={{ marginRight: 10, height: 18, width: 18 }} />

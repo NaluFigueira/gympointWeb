@@ -4,7 +4,7 @@ import Colors from '~/styles/colors';
 
 export const StyledButton = styled.button`
   background-color: ${props =>
-    props.styleType === 'Action' ? Colors.primary : '#CCCCCC'};
+    props.styleType === 'submit' ? Colors.primary : '#CCCCCC'};
   color: white;
   border: none;
   text-transform: uppercase;
