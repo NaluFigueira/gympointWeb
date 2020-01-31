@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { TableContainer, Active, TableData } from './styles';
 
-export default function Table({ headers, data, route }) {
+export default function Table({ headers, data, route, isHelpOrdersTable }) {
   function isHeaderCentered(index) {
     const item = headers.find(head => head.Id === index);
     if (item) return item.Centered;
@@ -28,12 +28,16 @@ export default function Table({ headers, data, route }) {
                 {header.Name}
               </th>
             ))}
-            <th>
-              <MdEdit />
-            </th>
-            <th>
-              <MdDelete />
-            </th>
+            {!isHelpOrdersTable && (
+              <>
+                <th style={{ textAlign: 'center' }}>
+                  <MdEdit />
+                </th>
+                <th style={{ textAlign: 'center' }}>
+                  <MdDelete />
+                </th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -46,6 +50,7 @@ export default function Table({ headers, data, route }) {
                       key={row.Id + column}
                       textAlignCenter={isHeaderCentered(index - 1)}
                       contentIsBooleanType={typeof row[column] === 'boolean'}
+                      style={{ color: isHelpOrdersTable ? '#666' : '' }}
                     >
                       {typeof row[column] === 'boolean' ? (
                         <Active active={row[column]} />
@@ -55,12 +60,20 @@ export default function Table({ headers, data, route }) {
                     </TableData>
                   )
               )}
-              <td>
-                <Link to={`${route}/edit`}>Editar</Link>
-              </td>
-              <td>
-                <a>Apagar</a>
-              </td>
+              {isHelpOrdersTable ? (
+                <td style={{ textAlign: 'end' }}>
+                  <a style={{ color: '#4d85ee' }}>Responder</a>
+                </td>
+              ) : (
+                <>
+                  <td style={{ textAlign: 'center' }}>
+                    <Link to={`${route}/edit`}>Editar</Link>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <a>Apagar</a>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
@@ -68,6 +81,10 @@ export default function Table({ headers, data, route }) {
     </TableContainer>
   );
 }
+
+Table.defaultProps = {
+  isHelpOrdersTable: false,
+};
 
 Table.propTypes = {
   headers: PropTypes.arrayOf(
@@ -79,4 +96,5 @@ Table.propTypes = {
   ).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   route: PropTypes.string.isRequired,
+  isHelpOrdersTable: PropTypes.bool,
 };

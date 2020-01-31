@@ -49,7 +49,7 @@ export default function EnrollmentsList() {
           { Id: 1, Name: 'Plano', Centered: true },
           { Id: 2, Name: 'Início', Centered: true },
           { Id: 3, Name: 'Término', Centered: true },
-          { Id: 4, Name: 'Ativa' },
+          { Id: 4, Name: 'Ativa', Centered: true },
         ]}
         data={data.filter(s =>
           s.Aluno.toUpperCase().startsWith(searchedName.toUpperCase())

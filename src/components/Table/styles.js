@@ -32,9 +32,6 @@ export const TableContainer = styled.div`
     }
 
     td {
-      &:nth-last-child(-n + 2) {
-        text-align: center;
-      }
       &:first-child {
         min-width: 15vw;
       }
@@ -51,10 +48,6 @@ export const TableContainer = styled.div`
     }
 
     th {
-      &:nth-last-child(-n + 3) {
-        text-align: center;
-      }
-
       font-weight: bold;
       text-transform: uppercase;
     }
