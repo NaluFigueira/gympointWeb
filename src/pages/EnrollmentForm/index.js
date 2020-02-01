@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Select } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { addDays, subDays, format } from 'date-fns';
+import { addDays, subDays, format, addMonths, parseISO } from 'date-fns';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
@@ -37,21 +37,21 @@ export default function EnrollmentForm({ edit }) {
   const [data, setData] = useState({});
   const [students, setStudents] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [endDate, setEndDate] = useState('');
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
     setStudents(['Ana', 'Breno', 'Iolanda', 'Mario', 'Gabriela']);
     setPlans([
-      { id: 0, title: 'Basic' },
-      { id: 1, title: 'Gold' },
-      { id: 2, title: 'Diamond' },
+      { id: 0, title: 'Basic', duration: 3, finalPrice: 120 },
+      { id: 1, title: 'Gold', duration: 6, finalPrice: 240 },
+      { id: 2, title: 'Diamond', duration: 12, finalPrice: 360 },
     ]);
   }, []);
 
   useEffect(() => {
     let beginningDate = new Date();
-    let endDate = new Date();
     beginningDate = format(beginningDate, 'yyyy-MM-dd');
-    endDate = format(endDate, 'yyyy-MM-dd');
     if (edit)
       setData({
         student: 'Ana',
@@ -68,7 +68,21 @@ export default function EnrollmentForm({ edit }) {
         endDate,
         finalPrice: 0,
       });
-  }, [edit]);
+  }, [edit, endDate]);
+
+  function calculatePriceAndEndDate() {
+    const plan = document.getElementById('plan');
+    const beginningDate = document.getElementById('beginningDate');
+    const selectedPlan = plans.find(p => p.id === parseInt(plan.value, 8));
+    if (selectedPlan) {
+      const date = addMonths(
+        parseISO(beginningDate.value),
+        selectedPlan.duration
+      );
+      setPrice(selectedPlan.finalPrice);
+      setEndDate(date);
+    }
+  }
 
   function handleSubmit(formData) {
     // eslint-disable-next-line no-console
@@ -106,19 +120,42 @@ export default function EnrollmentForm({ edit }) {
         <div>
           <label htmlFor="plan">
             Plano
-            <Select name="plan" options={plans} />
+            <Select
+              name="plan"
+              options={plans}
+              id="plan"
+              onChange={calculatePriceAndEndDate}
+            />
           </label>
           <label htmlFor="beginningDate">
             Data de início
-            <Input name="beginningDate" type="date" id="beginningDate" />
+            <Input
+              name="beginningDate"
+              type="date"
+              id="beginningDate"
+              onChange={calculatePriceAndEndDate}
+            />
           </label>
           <label htmlFor="endDate">
             Data de término
-            <Input name="endDate" type="date" id="endDate" />
+            <Input
+              name="endDate"
+              type="date"
+              id="endDate"
+              disabled
+              value={endDate}
+            />
           </label>
           <label htmlFor="finalPrice">
             Valor Final
-            <Input name="finalPrice" type="number" step=".01" id="finalPrice" />
+            <Input
+              name="finalPrice"
+              type="number"
+              step=".01"
+              id="finalPrice"
+              disabled
+              value={price}
+            />
           </label>
         </div>
       </Form>

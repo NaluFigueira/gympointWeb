@@ -15,9 +15,10 @@ export default function PlanForm({ edit }) {
     title: Yup.string().required('Título é obrigatório!'),
     duration: Yup.number().required('Duração do plano é obrigatória!'),
     monthlyPrice: Yup.number().required('Preço mensal é obrigatório!'),
-    annualPrice: Yup.number().required('Preço anual é obrigatório!'),
+    totalPrice: Yup.number().required('Preço anual é obrigatório!'),
   });
   const [data, setData] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0.0);
 
   useEffect(() => {
     if (edit)
@@ -25,16 +26,23 @@ export default function PlanForm({ edit }) {
         title: 'Super',
         duration: 24,
         monthlyPrice: 130,
-        annualPrice: 1120,
+        totalPrice: 1120,
       });
     else
       setData({
         title: '',
         duration: 0,
         monthlyPrice: 0,
-        annualPrice: 0,
+        totalPrice: 0,
       });
   }, [edit]);
+
+  function calculatefinalPrice() {
+    const duration = document.getElementById('duration');
+    const monthlyPrice = document.getElementById('monthlyPrice');
+
+    setTotalPrice(parseInt(duration.value, 8) * parseFloat(monthlyPrice.value));
+  }
 
   function handleSubmit(formData) {
     // eslint-disable-next-line no-console
@@ -62,7 +70,12 @@ export default function PlanForm({ edit }) {
         <div>
           <label htmlFor="duration">
             Duração (em meses)
-            <Input name="duration" type="number" id="duration" />
+            <Input
+              name="duration"
+              type="number"
+              id="duration"
+              onChange={calculatefinalPrice}
+            />
           </label>
           <label htmlFor="monthlyPrice">
             Preço mensal
@@ -70,16 +83,18 @@ export default function PlanForm({ edit }) {
               name="monthlyPrice"
               type="number"
               step=".01"
+              onChange={calculatefinalPrice}
               id="monthlyPrice"
             />
           </label>
-          <label htmlFor="annualPrice">
-            Preço anual
+          <label htmlFor="totalPrice">
+            Preço total
             <Input
-              name="annualPrice"
+              name="totalPrice"
               type="number"
-              step=".01"
-              id="annualPrice"
+              disabled
+              value={totalPrice}
+              id="totalPrice"
             />
           </label>
         </div>

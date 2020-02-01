@@ -12,3 +12,15 @@ export const Container = styled.div`
     padding: 20px;
   }
 `;
+
+export const DialogContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+`;

@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 
@@ -8,7 +10,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { TableContainer, Active, TableData } from './styles';
 
-export default function Table({ headers, data, route, isHelpOrdersTable }) {
+export default function Table(props) {
+  const { headers, data, route, isHelpOrdersTable, onClickAnswer } = props;
   function isHeaderCentered(index) {
     const item = headers.find(head => head.Id === index);
     if (item) return item.Centered;
@@ -62,7 +65,9 @@ export default function Table({ headers, data, route, isHelpOrdersTable }) {
               )}
               {isHelpOrdersTable ? (
                 <td style={{ textAlign: 'end' }}>
-                  <a style={{ color: '#4d85ee' }}>Responder</a>
+                  <a style={{ color: '#4d85ee' }} onClick={onClickAnswer}>
+                    Responder
+                  </a>
                 </td>
               ) : (
                 <>
@@ -84,6 +89,7 @@ export default function Table({ headers, data, route, isHelpOrdersTable }) {
 
 Table.defaultProps = {
   isHelpOrdersTable: false,
+  onClickAnswer: () => {},
 };
 
 Table.propTypes = {
@@ -97,4 +103,5 @@ Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   route: PropTypes.string.isRequired,
   isHelpOrdersTable: PropTypes.bool,
+  onClickAnswer: PropTypes.func,
 };

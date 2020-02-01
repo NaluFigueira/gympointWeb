@@ -39,7 +39,7 @@ export default createGlobalStyle`
     color: #444;
   }
 
-  input{
+  input, textarea{
     border: 1px solid #ddd;
     border-radius: 4px;
     height: 45px;
