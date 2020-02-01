@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
@@ -6,11 +7,11 @@ import { Form, Input, Select } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { addDays, subDays, format, addMonths, parseISO } from 'date-fns';
+import AsyncSelect from 'react-select/async';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
 import { Container, ActionsContainer, SearchBar } from './styles';
-import { formatPrice } from '~/util/format';
 
 export default function EnrollmentForm({ edit }) {
   const [data, setData] = useState({});
@@ -18,9 +19,9 @@ export default function EnrollmentForm({ edit }) {
   const [plans, setPlans] = useState([]);
   const [endDate, setEndDate] = useState('');
   const [price, setPrice] = useState(0);
+  const [selectedStudent, setSelectedStudent] = useState('');
 
   const schema = Yup.object().shape({
-    student: Yup.string().required('É obrigátorio a seleção de um aluno!'),
     plan: Yup.number().required('É obrigátorio a seleção de um plano!'),
     beginningDate: Yup.date('Data inválida!')
       .min(
@@ -42,7 +43,21 @@ export default function EnrollmentForm({ edit }) {
   });
 
   useEffect(() => {
-    setStudents(['Ana', 'Breno', 'Iolanda', 'Mario', 'Gabriela']);
+    setStudents([
+      { value: 0, label: 'Ana' },
+      { value: 1, label: 'Breno' },
+      { value: 2, label: 'Iolanda' },
+      { value: 3, label: 'Mario' },
+      { value: 4, label: 'Gabi' },
+      { value: 5, label: 'Amanda' },
+      { value: 6, label: 'Roberto' },
+      { value: 7, label: 'Geraldo' },
+      { value: 8, label: 'Ricardo' },
+      { value: 9, label: 'Roberta' },
+      { value: 10, label: 'Armando' },
+      { value: 11, label: 'Anastacia' },
+      { value: 12, label: 'Bianca' },
+    ]);
     setPlans([
       { id: 0, title: 'Basic', duration: 3, finalPrice: 120 },
       { id: 1, title: 'Gold', duration: 6, finalPrice: 240 },
@@ -85,9 +100,22 @@ export default function EnrollmentForm({ edit }) {
     }
   }
 
+  const filterStudentsByName = inputValue => {
+    return students.filter(s =>
+      s.label.toLowerCase().startsWith(inputValue.toLowerCase())
+    );
+  };
+
+  const loadOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterStudentsByName(inputValue));
+    }, 1000);
+  };
+
   function handleSubmit(formData) {
     // eslint-disable-next-line no-console
     console.log(formData);
+    console.log(selectedStudent);
   }
 
   return (
@@ -104,19 +132,22 @@ export default function EnrollmentForm({ edit }) {
             <Button title="Salvar" type="submit" />
           </SearchBar>
         </ActionsContainer>
-        <label htmlFor="student">
+        <label htmlFor="student" style={{ marginBottom: 20 }}>
           Aluno
-          <Input
-            name="student"
-            type="text"
-            list="students"
-            autoComplete="off"
+          <AsyncSelect
+            cacheOptions
+            loadOptions={loadOptions}
+            defaultOptions={students}
+            onInputChange={student => setSelectedStudent(student)}
+            styles={{
+              container: styles => ({
+                ...styles,
+                width: '100%',
+                marginTop: 10,
+              }),
+              control: styles => ({ ...styles, width: '100%' }),
+            }}
           />
-          <datalist id="students">
-            {students.map((student, index) => (
-              <option key={student + index}>{student}</option>
-            ))}
-          </datalist>
         </label>
         <div>
           <label htmlFor="plan">
@@ -149,12 +180,7 @@ export default function EnrollmentForm({ edit }) {
           </label>
           <label htmlFor="finalPrice">
             Valor Final
-            <Input
-              name="finalPrice"
-              id="finalPrice"
-              disabled
-              value={formatPrice(price)}
-            />
+            <Input name="finalPrice" id="finalPrice" disabled value={price} />
           </label>
         </div>
       </Form>
