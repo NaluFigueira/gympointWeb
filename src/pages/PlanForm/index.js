@@ -10,6 +10,8 @@ import history from '~/services/history';
 
 import { Container, ActionsContainer, SearchBar } from './styles';
 
+import { formatPrice } from '~/util/format';
+
 export default function PlanForm({ edit }) {
   const schema = Yup.object().shape({
     title: Yup.string().required('Título é obrigatório!'),
@@ -91,9 +93,8 @@ export default function PlanForm({ edit }) {
             Preço total
             <Input
               name="totalPrice"
-              type="number"
               disabled
-              value={totalPrice}
+              value={formatPrice(totalPrice)}
               id="totalPrice"
             />
           </label>

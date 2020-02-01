@@ -10,8 +10,15 @@ import Button from '~/components/Button';
 
 import history from '~/services/history';
 import { Container, ActionsContainer, SearchBar } from './styles';
+import { formatPrice } from '~/util/format';
 
 export default function EnrollmentForm({ edit }) {
+  const [data, setData] = useState({});
+  const [students, setStudents] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [endDate, setEndDate] = useState('');
+  const [price, setPrice] = useState(0);
+
   const schema = Yup.object().shape({
     student: Yup.string().required('É obrigátorio a seleção de um aluno!'),
     plan: Yup.number().required('É obrigátorio a seleção de um plano!'),
@@ -33,12 +40,6 @@ export default function EnrollmentForm({ edit }) {
       .required('Data de término é obrigatório!'),
     finalPrice: Yup.number().required('Valor final é obrigatório!'),
   });
-
-  const [data, setData] = useState({});
-  const [students, setStudents] = useState([]);
-  const [plans, setPlans] = useState([]);
-  const [endDate, setEndDate] = useState('');
-  const [price, setPrice] = useState(0);
 
   useEffect(() => {
     setStudents(['Ana', 'Breno', 'Iolanda', 'Mario', 'Gabriela']);
@@ -74,13 +75,13 @@ export default function EnrollmentForm({ edit }) {
     const plan = document.getElementById('plan');
     const beginningDate = document.getElementById('beginningDate');
     const selectedPlan = plans.find(p => p.id === parseInt(plan.value, 8));
-    if (selectedPlan) {
+    if (selectedPlan && beginningDate.value !== '') {
       const date = addMonths(
         parseISO(beginningDate.value),
         selectedPlan.duration
       );
       setPrice(selectedPlan.finalPrice);
-      setEndDate(date);
+      setEndDate(format(date, 'yyyy-MM-dd'));
     }
   }
 
@@ -150,11 +151,9 @@ export default function EnrollmentForm({ edit }) {
             Valor Final
             <Input
               name="finalPrice"
-              type="number"
-              step=".01"
               id="finalPrice"
               disabled
-              value={price}
+              value={formatPrice(price)}
             />
           </label>
         </div>
