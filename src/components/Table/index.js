@@ -11,11 +11,24 @@ import { Link } from 'react-router-dom';
 import { TableContainer, Active, TableData } from './styles';
 
 export default function Table(props) {
-  const { headers, data, route, isHelpOrdersTable, onClickAnswer } = props;
+  const {
+    headers,
+    data,
+    route,
+    isHelpOrdersTable,
+    onClickAnswer,
+    onDelete,
+  } = props;
   function isHeaderCentered(index) {
     const item = headers.find(head => head.Id === index);
     if (item) return item.Centered;
     return false;
+  }
+
+  function confirmDeletion() {
+    if (window.confirm('Você tem certeza de que deseja deletar esse item?')) {
+      onDelete();
+    }
   }
 
   return (
@@ -75,7 +88,7 @@ export default function Table(props) {
                     <Link to={`${route}/edit`}>Editar</Link>
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <a>Apagar</a>
+                    <a onClick={() => confirmDeletion(row.Id)}>Apagar</a>
                   </td>
                 </>
               )}
@@ -90,6 +103,7 @@ export default function Table(props) {
 Table.defaultProps = {
   isHelpOrdersTable: false,
   onClickAnswer: () => {},
+  onDelete: () => {},
 };
 
 Table.propTypes = {
@@ -104,4 +118,5 @@ Table.propTypes = {
   route: PropTypes.string.isRequired,
   isHelpOrdersTable: PropTypes.bool,
   onClickAnswer: PropTypes.func,
+  onDelete: PropTypes.func,
 };
