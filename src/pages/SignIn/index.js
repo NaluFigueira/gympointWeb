@@ -1,12 +1,18 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
 import logo from '~/assets/logo.png';
 
+import { signInRequest } from '~/store/modules/auth/actions';
+
 export default function SignIn() {
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.auth.loading);
+
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Insira um e-mail válido!')
@@ -14,13 +20,8 @@ export default function SignIn() {
     password: Yup.string().required('Senha é obrigatória'),
   });
 
-  const [loading, setLoading] = useState(false);
-
   function handleSubmit({ email, password }) {
-    setLoading(true);
-    // eslint-disable-next-line no-console
-    console.log({ email, password });
-    setLoading(false);
+    dispatch(signInRequest(email, password));
   }
 
   return (

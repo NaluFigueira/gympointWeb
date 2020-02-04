@@ -37,6 +37,8 @@ module.exports = {
     "global-require": "off",
     "no-param-reassign": "off",
     "no-underscore-dangle": "off",
+    "jsx-a11y/click-events-have-key-events":"off",
+    "jsx-a11y/no-static-element-interactions":"off",
     camelcase: "off",
     "no-console": ["error", { allow: ["tron"] }],
   },

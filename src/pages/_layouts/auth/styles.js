@@ -5,7 +5,7 @@ import { darken } from 'polished';
 import Colors from '~/styles/colors';
 
 export const Wrapper = styled.div`
-  height: 100%;
+  height: 100vh;
   background: ${Colors.primary};
   display: flex;
   justify-content: center;

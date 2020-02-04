@@ -54,5 +54,8 @@ export const Profile = styled.div`
 
   span {
     color: #de3b3b;
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
