@@ -1,42 +1,29 @@
 import React, { useState, useEffect } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import ActionsContainer from '~/components/ActionsContainer';
 import Table from '~/components/Table';
 
 import { Container } from './styles';
 
-import { formatPrice } from '~/util/format';
+import { getPlansRequest, deletePlan } from '~/store/modules/plans/actions';
 
 import history from '~/services/history';
 
 export default function PlansList() {
-  const [data, setData] = useState([]);
+  const plans = useSelector(state => state.plans.plans);
+  const dispatch = useDispatch();
   const [searchedTitle, setSearchedTitle] = useState('');
+
   useEffect(() => {
-    setData([
-      {
-        Id: 0,
-        Titulo: 'Start',
-        Duracao: '1 mês',
-        Valor: formatPrice(129),
-      },
-      {
-        Id: 1,
-        Titulo: 'Gold',
-        Duracao: '3 meses',
-        Valor: formatPrice(109),
-      },
-      {
-        Id: 2,
-        Titulo: 'Diamond',
-        Duracao: '6 meses',
-        Valor: formatPrice(89),
-      },
-    ]);
-  }, []);
+    dispatch(getPlansRequest());
+  }, [dispatch]);
 
   const HandleSearch = name => {
     if (name !== searchedTitle) setSearchedTitle(name);
+  };
+
+  const HandleDelete = id => {
+    dispatch(deletePlan(id));
   };
 
   return (
@@ -48,15 +35,26 @@ export default function PlansList() {
       />
       <Table
         route="plan"
+        onDelete={HandleDelete}
         headers={[
-          { Id: 0, Name: 'Título' },
-          { Id: 1, Name: 'Duração', Centered: true },
-          { Id: 2, Name: 'Valor p/ mês', Centered: true },
+          { Id: 0, Title: 'Título', Field: 'title' },
+          {
+            Id: 1,
+            Title: 'Duração (em meses)',
+            Field: 'duration',
+            Centered: true,
+          },
+          { Id: 2, Title: 'Valor p/ mês', Field: 'price', Centered: true },
         ]}
-        data={data.filter(s =>
-          s.Titulo.toUpperCase().startsWith(searchedTitle.toUpperCase())
-        )}
+        data={
+          plans.length > 0
+            ? plans.filter(s =>
+                s.title.toUpperCase().startsWith(searchedTitle.toUpperCase())
+              )
+            : []
+        }
       />
+      {plans.length === 0 && <span>Não há planos para listagem</span>}
     </Container>
   );
 }

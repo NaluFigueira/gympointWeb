@@ -1,52 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
 
+import { createPlan, editPlan } from '~/store/modules/plans/actions';
+
 import { Container, ActionsContainer, SearchBar } from './styles';
 
-export default function PlanForm({ edit }) {
+export default function PlanForm() {
+  const [data, setData] = useState({});
+  const [price, setPrice] = useState(0.0);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { edit, object } = location.state || { edit: false, object: {} };
+
   const schema = Yup.object().shape({
     title: Yup.string().required('Título é obrigatório!'),
     duration: Yup.number().required('Duração do plano é obrigatória!'),
     monthlyPrice: Yup.number().required('Preço mensal é obrigatório!'),
-    totalPrice: Yup.number().required('Preço anual é obrigatório!'),
+    price: Yup.number().required('Preço anual é obrigatório!'),
   });
-  const [data, setData] = useState({});
-  const [totalPrice, setTotalPrice] = useState(0.0);
 
   useEffect(() => {
-    if (edit)
+    if (edit) {
+      const monthlyPrice = object.price / object.duration;
       setData({
-        title: 'Super',
-        duration: 24,
-        monthlyPrice: 130,
-        totalPrice: 1120,
+        monthlyPrice: Math.round(monthlyPrice * 100) / 100,
+        ...object,
       });
-    else
-      setData({
-        title: '',
-        duration: 0,
-        monthlyPrice: 0,
-        totalPrice: 0,
-      });
-  }, [edit]);
+      setPrice(object.price);
+    }
+  }, []);
 
   function calculatefinalPrice() {
     const duration = document.getElementById('duration');
     const monthlyPrice = document.getElementById('monthlyPrice');
 
-    setTotalPrice(parseInt(duration.value, 8) * parseFloat(monthlyPrice.value));
+    setPrice(parseInt(duration.value, 8) * parseFloat(monthlyPrice.value));
   }
 
   function handleSubmit(formData) {
-    // eslint-disable-next-line no-console
-    console.log(formData);
+    if (!edit) dispatch(createPlan(formData));
+    else dispatch(editPlan({ id: data.id, ...formData }));
   }
 
   return (
@@ -87,25 +88,12 @@ export default function PlanForm({ edit }) {
               id="monthlyPrice"
             />
           </label>
-          <label htmlFor="totalPrice">
+          <label htmlFor="price">
             Preço total
-            <Input
-              name="totalPrice"
-              disabled
-              value={totalPrice}
-              id="totalPrice"
-            />
+            <Input name="price" disabled value={price} id="price" />
           </label>
         </div>
       </Form>
     </Container>
   );
 }
-
-PlanForm.defaultProps = {
-  edit: false,
-};
-
-PlanForm.propTypes = {
-  edit: PropTypes.bool,
-};
