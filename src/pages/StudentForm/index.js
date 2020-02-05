@@ -1,17 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
 
+import { createStudent, editStudent } from '~/store/modules/students/actions';
+
 import { Container, ActionsContainer, SearchBar } from './styles';
 
-export default function StudentForm({ edit }) {
+export default function StudentForm() {
   const [data, setData] = useState({});
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { edit, object } = location.state || { edit: false, object: {} };
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Nome completo é obrigatório!'),
@@ -24,20 +31,12 @@ export default function StudentForm({ edit }) {
   });
 
   useEffect(() => {
-    if (edit)
-      setData({
-        name: 'Ana',
-        email: 'email@email.com',
-        age: 21,
-        weight: 59.5,
-        height: 1.55,
-      });
-    else setData({});
-  }, [edit]);
+    if (edit) setData(object);
+  }, []);
 
   function handleSubmit(formData) {
-    // eslint-disable-next-line no-console
-    console.log(formData);
+    if (!edit) dispatch(createStudent(formData));
+    else dispatch(editStudent({ id: data.id, ...formData }));
   }
 
   return (
@@ -85,11 +84,3 @@ export default function StudentForm({ edit }) {
     </Container>
   );
 }
-
-StudentForm.defaultProps = {
-  edit: false,
-};
-
-StudentForm.propTypes = {
-  edit: PropTypes.bool,
-};

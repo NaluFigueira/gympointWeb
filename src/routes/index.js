@@ -27,15 +27,11 @@ export default function Routes() {
 
       <Route path="/plans" component={PlansList} isPrivate />
       <Route path="/plan/register" component={PlanForm} isPrivate />
-      <Route path="/plan/edit" component={() => <PlanForm edit />} isPrivate />
+      <Route path="/plan/edit" component={PlanForm} isPrivate />
 
       <Route path="/enrollments" component={EnrollmentsList} isPrivate />
       <Route path="/enrollment/register" component={EnrollmentForm} isPrivate />
-      <Route
-        path="/enrollment/edit"
-        component={() => <EnrollmentForm edit />}
-        isPrivate
-      />
+      <Route path="/enrollment/edit" component={EnrollmentForm} isPrivate />
 
       <Route path="/help_orders" component={HelpOrders} isPrivate />
     </Switch>

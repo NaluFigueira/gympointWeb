@@ -17,15 +17,21 @@ export default function Table(props) {
     onClickAnswer,
     onDelete,
   } = props;
-  function isHeaderCentered(index) {
-    const item = headers.find(head => head.Id === index);
+
+  function isHeaderCentered(header) {
+    const item = headers.find(head => head.Field === header);
     if (item) return item.Centered;
     return false;
   }
 
-  function confirmDeletion() {
+  function verifyIfHeaderExists(header) {
+    const item = headers.find(head => head.Field === header);
+    return item !== undefined;
+  }
+
+  function confirmDeletion(id) {
     if (window.confirm('Você tem certeza de que deseja deletar esse item?')) {
-      onDelete();
+      onDelete(id);
     }
   }
 
@@ -36,10 +42,10 @@ export default function Table(props) {
           <tr>
             {headers.map(header => (
               <th
-                key={header.Id}
+                key={header.Id + header.Title}
                 style={{ textAlign: header.Centered ? 'center' : '' }}
               >
-                {header.Name}
+                {header.Title}
               </th>
             ))}
             {!isHelpOrdersTable && (
@@ -56,13 +62,13 @@ export default function Table(props) {
         </thead>
         <tbody>
           {data.map(row => (
-            <tr key={row.Id}>
+            <tr key={row.id}>
               {Object.keys(row).map(
-                (column, index) =>
-                  column !== 'Id' && (
+                column =>
+                  verifyIfHeaderExists(column) && (
                     <TableData
-                      key={row.Id + column}
-                      textAlignCenter={isHeaderCentered(index - 1)}
+                      key={row.id + column}
+                      textAlignCenter={isHeaderCentered(column)}
                       contentIsBooleanType={typeof row[column] === 'boolean'}
                       style={{ color: isHelpOrdersTable ? '#666' : '' }}
                     >
@@ -83,10 +89,17 @@ export default function Table(props) {
               ) : (
                 <>
                   <td style={{ textAlign: 'center' }}>
-                    <Link to={`${route}/edit`}>Editar</Link>
+                    <Link
+                      to={{
+                        pathname: `${route}/edit`,
+                        state: { object: row, edit: true },
+                      }}
+                    >
+                      Editar
+                    </Link>
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <a onClick={() => confirmDeletion(row.Id)}>Apagar</a>
+                    <a onClick={() => confirmDeletion(row.id)}>Apagar</a>
                   </td>
                 </>
               )}
