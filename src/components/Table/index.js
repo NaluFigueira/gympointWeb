@@ -4,7 +4,7 @@ import React from 'react';
 import { MdEdit, MdDelete } from 'react-icons/md';
 
 import PropTypes from 'prop-types';
-
+import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { TableContainer, Active, TableData } from './styles';
 
@@ -27,6 +27,16 @@ export default function Table(props) {
   function verifyIfHeaderExists(header) {
     const item = headers.find(head => head.Field === header);
     return item !== undefined;
+  }
+
+  function dataContent(row, column) {
+    if (typeof row[column] === 'boolean')
+      return <Active active={row[column]} />;
+
+    if (column === 'start_date' || column === 'end_date')
+      return format(parseISO(row[column]), 'dd/MM/yyyy');
+
+    return row[column];
   }
 
   function confirmDeletion(id) {
@@ -72,11 +82,7 @@ export default function Table(props) {
                       contentIsBooleanType={typeof row[column] === 'boolean'}
                       style={{ color: isHelpOrdersTable ? '#666' : '' }}
                     >
-                      {typeof row[column] === 'boolean' ? (
-                        <Active active={row[column]} />
-                      ) : (
-                        row[column]
-                      )}
+                      {dataContent(row, column)}
                     </TableData>
                   )
               )}

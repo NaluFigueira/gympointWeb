@@ -1,38 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
+import { useDispatch, useSelector } from 'react-redux';
 import ActionsContainer from '~/components/ActionsContainer';
 import Table from '~/components/Table';
 
 import { Container } from './styles';
+import {
+  getEnrollmentsRequest,
+  deleteEnrollment,
+} from '~/store/modules/enrollments/actions';
 
 import history from '~/services/history';
 
 export default function EnrollmentsList() {
-  const [data, setData] = useState([]);
+  const enrollments = useSelector(state => state.enrollments.enrollments).map(
+    enrollment => {
+      return {
+        id: enrollment.id,
+        name: enrollment.student.name,
+        title: enrollment.plan.title,
+        start_date: enrollment.start_date,
+        end_date: enrollment.end_date,
+        active: enrollment.active,
+        price: enrollment.price,
+        plan: enrollment.plan,
+        student: enrollment.student,
+      };
+    }
+  );
+  const dispatch = useDispatch();
   const [searchedName, setSearchedName] = useState('');
+
   useEffect(() => {
-    setData([
-      {
-        Id: 0,
-        Aluno: 'Lennert Nijenbijvank',
-        Plano: 'Start',
-        Inicio: '30 de Abril de 2019',
-        Termino: '30 de Maio de 2019',
-        Ativa: true,
-      },
-      {
-        Id: 1,
-        Aluno: 'Sebastian Westergren',
-        Plano: 'Diamond',
-        Inicio: '14 de Outubro de 2019',
-        Termino: '14 de Abril de 2020',
-        Ativa: false,
-      },
-    ]);
-  }, []);
+    dispatch(getEnrollmentsRequest());
+  }, [dispatch]);
 
   const HandleSearch = name => {
     if (name !== searchedName) setSearchedName(name);
+  };
+
+  const HandleDelete = id => {
+    dispatch(deleteEnrollment(id));
   };
 
   return (
@@ -44,17 +52,25 @@ export default function EnrollmentsList() {
       />
       <Table
         route="enrollment"
+        onDelete={HandleDelete}
         headers={[
-          { Id: 0, Name: 'Aluno' },
-          { Id: 1, Name: 'Plano', Centered: true },
-          { Id: 2, Name: 'Início', Centered: true },
-          { Id: 3, Name: 'Término', Centered: true },
-          { Id: 4, Name: 'Ativa', Centered: true },
+          { Id: 0, Title: 'Aluno', Field: 'name' },
+          { Id: 1, Title: 'Plano', Field: 'title', Centered: true },
+          { Id: 2, Title: 'Início', Field: 'start_date', Centered: true },
+          { Id: 3, Title: 'Término', Field: 'end_date', Centered: true },
+          { Id: 4, Title: 'Ativa', Field: 'active', Centered: true },
         ]}
-        data={data.filter(s =>
-          s.Aluno.toUpperCase().startsWith(searchedName.toUpperCase())
-        )}
+        data={
+          enrollments.length > 0
+            ? enrollments.filter(student =>
+                student.name
+                  .toUpperCase()
+                  .startsWith(searchedName.toUpperCase())
+              )
+            : []
+        }
       />
+      {enrollments.length === 0 && <span>Não há matrículas para listagem</span>}
     </Container>
   );
 }

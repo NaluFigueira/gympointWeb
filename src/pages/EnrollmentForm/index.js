@@ -1,121 +1,128 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-
-import { Form, Input, Select } from '@rocketseat/unform';
-import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
+import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
-import { addDays, subDays, format, addMonths, parseISO } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
+import { subDays, format, addMonths, parseISO } from 'date-fns';
 import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
 import Button from '~/components/Button';
 
 import history from '~/services/history';
+import {
+  createEnrollment,
+  editEnrollment,
+} from '~/store/modules/enrollments/actions';
+
+import api from '~/services/api';
+
+import { getPlansRequest } from '~/store/modules/plans/actions';
+import { getStudentsRequest } from '~/store/modules/students/actions';
+
 import { Container, ActionsContainer, SearchBar } from './styles';
 
-export default function EnrollmentForm({ edit }) {
+export default function EnrollmentForm() {
   const [data, setData] = useState({});
-  const [students, setStudents] = useState([]);
-  const [plans, setPlans] = useState([]);
-  const [endDate, setEndDate] = useState('');
+  const plansOptions = useSelector(state => state.plans.plans).map(plan => {
+    return {
+      value: plan.id,
+      label: plan.title,
+    };
+  });
+  const plans = useSelector(state => state.plans.plans);
+  const students = useSelector(state => state.students.students).map(
+    student => {
+      return {
+        value: student.id,
+        label: student.name,
+      };
+    }
+  );
+  const [end_date, setEndDate] = useState('');
   const [price, setPrice] = useState(0);
   const [selectedStudent, setSelectedStudent] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('');
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { edit, object } = location.state || { edit: false, object: {} };
 
   const schema = Yup.object().shape({
-    plan: Yup.number().required('É obrigátorio a seleção de um plano!'),
-    beginningDate: Yup.date('Data inválida!')
+    start_date: Yup.date('Data inválida!')
       .min(
         subDays(new Date(), 1),
         'A data de inicio deve ser a partir de hoje!'
       )
       .required('Data de início é obrigatório!'),
-    endDate: Yup.date('Data inválida!')
-      .when('beginningDate', (beginningDate, field) =>
-        beginningDate
-          ? field.min(
-              addDays(beginningDate, 1),
-              'A data de término deve ser superior a data de início!'
-            )
-          : field
-      )
-      .required('Data de término é obrigatório!'),
-    finalPrice: Yup.number().required('Valor final é obrigatório!'),
   });
 
   useEffect(() => {
-    setStudents([
-      { value: 0, label: 'Ana' },
-      { value: 1, label: 'Breno' },
-      { value: 2, label: 'Iolanda' },
-      { value: 3, label: 'Mario' },
-      { value: 4, label: 'Gabi' },
-      { value: 5, label: 'Amanda' },
-      { value: 6, label: 'Roberto' },
-      { value: 7, label: 'Geraldo' },
-      { value: 8, label: 'Ricardo' },
-      { value: 9, label: 'Roberta' },
-      { value: 10, label: 'Armando' },
-      { value: 11, label: 'Anastacia' },
-      { value: 12, label: 'Bianca' },
-    ]);
-    setPlans([
-      { id: 0, title: 'Basic', duration: 3, finalPrice: 120 },
-      { id: 1, title: 'Gold', duration: 6, finalPrice: 240 },
-      { id: 2, title: 'Diamond', duration: 12, finalPrice: 360 },
-    ]);
-  }, []);
+    dispatch(getPlansRequest());
+    dispatch(getStudentsRequest());
+  }, [dispatch]);
 
   useEffect(() => {
-    let beginningDate = new Date();
-    beginningDate = format(beginningDate, 'yyyy-MM-dd');
-    if (edit)
+    if (edit) {
+      setSelectedStudent({ value: object.student_id, label: object.name });
+      setSelectedPlan({ value: object.plan.id, label: object.title });
+      setEndDate(format(parseISO(object.end_date), 'yyyy-MM-dd'));
+      setPrice(object.price);
       setData({
-        student: 'Ana',
-        plan: 0,
-        beginningDate,
-        endDate,
-        finalPrice: 255,
+        start_date: format(parseISO(object.start_date), 'yyyy-MM-dd'),
       });
-    else
-      setData({
-        student: '',
-        plan: 0,
-        beginningDate,
-        endDate,
-        finalPrice: 0,
-      });
-  }, [edit, endDate]);
+    }
+  }, [edit, object]);
 
   function calculatePriceAndEndDate() {
-    const plan = document.getElementById('plan');
-    const beginningDate = document.getElementById('beginningDate');
-    const selectedPlan = plans.find(p => p.id === parseInt(plan.value, 8));
-    if (selectedPlan && beginningDate.value !== '') {
-      const date = addMonths(
-        parseISO(beginningDate.value),
-        selectedPlan.duration
-      );
-      setPrice(selectedPlan.finalPrice);
+    const start_date = document.getElementById('start_date');
+    const sPlan = plans.find(p => p.id === selectedPlan.value);
+    if (sPlan && start_date.value !== '') {
+      const date = addMonths(parseISO(start_date.value), sPlan.duration);
+      setPrice(sPlan.price * sPlan.duration);
       setEndDate(format(date, 'yyyy-MM-dd'));
     }
   }
 
-  const filterStudentsByName = inputValue => {
-    return students.filter(s =>
-      s.label.toLowerCase().startsWith(inputValue.toLowerCase())
-    );
-  };
+  useEffect(() => {
+    calculatePriceAndEndDate();
+  }, [selectedPlan]);
 
-  const loadOptions = (inputValue, callback) => {
-    setTimeout(() => {
-      callback(filterStudentsByName(inputValue));
-    }, 1000);
+  const loadOptions = inputValue => {
+    return api
+      .get('/students', { params: { name: inputValue } })
+      .then(response => {
+        const options = response.data.map(student => ({
+          value: student.id,
+          label: student.name,
+        }));
+        return options;
+      })
+      .catch(error => {
+        console.tron.log(error);
+      });
   };
 
   function handleSubmit(formData) {
-    // eslint-disable-next-line no-console
-    console.log(formData);
-    console.log(selectedStudent);
+    const { start_date } = formData;
+    if (!edit)
+      dispatch(
+        createEnrollment({
+          student_id: selectedStudent.value,
+          plan_id: selectedPlan.value,
+          start_date,
+        })
+      );
+    else
+      dispatch(
+        editEnrollment({
+          id: object.id,
+          plan_id: selectedPlan.value,
+          start_date,
+        })
+      );
   }
 
   return (
@@ -137,8 +144,9 @@ export default function EnrollmentForm({ edit }) {
           <AsyncSelect
             cacheOptions
             loadOptions={loadOptions}
+            value={selectedStudent}
+            onChange={selected => setSelectedStudent(selected)}
             defaultOptions={students}
-            onInputChange={student => setSelectedStudent(student)}
             styles={{
               container: styles => ({
                 ...styles,
@@ -154,28 +162,35 @@ export default function EnrollmentForm({ edit }) {
             Plano
             <Select
               name="plan"
-              options={plans}
-              id="plan"
-              onChange={calculatePriceAndEndDate}
+              options={plansOptions}
+              value={selectedPlan}
+              onChange={plan => setSelectedPlan(plan)}
+              styles={{
+                container: styles => ({
+                  ...styles,
+                  width: '100%',
+                }),
+                control: styles => ({ ...styles, width: '100%' }),
+              }}
             />
           </label>
-          <label htmlFor="beginningDate">
+          <label htmlFor="start_date">
             Data de início
             <Input
-              name="beginningDate"
+              name="start_date"
               type="date"
-              id="beginningDate"
+              id="start_date"
               onChange={calculatePriceAndEndDate}
             />
           </label>
-          <label htmlFor="endDate">
+          <label htmlFor="end_date">
             Data de término
             <Input
-              name="endDate"
+              name="end_date"
               type="date"
-              id="endDate"
+              id="end_date"
               disabled
-              value={endDate}
+              value={end_date}
             />
           </label>
           <label htmlFor="finalPrice">
@@ -187,11 +202,3 @@ export default function EnrollmentForm({ edit }) {
     </Container>
   );
 }
-
-EnrollmentForm.defaultProps = {
-  edit: false,
-};
-
-EnrollmentForm.propTypes = {
-  edit: PropTypes.bool,
-};
