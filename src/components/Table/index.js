@@ -88,7 +88,10 @@ export default function Table(props) {
               )}
               {isHelpOrdersTable ? (
                 <td style={{ textAlign: 'end' }}>
-                  <a style={{ color: '#4d85ee' }} onClick={onClickAnswer}>
+                  <a
+                    style={{ color: '#4d85ee' }}
+                    onClick={() => onClickAnswer(row.id)}
+                  >
                     Responder
                   </a>
                 </td>

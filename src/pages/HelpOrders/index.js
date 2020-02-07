@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from 'react';
 
+import { useDispatch, useSelector } from 'react-redux';
 import Table from '~/components/Table';
 
 import { Container, DialogContainer } from './styles';
 
+import { getHelpOrdersRequest } from '~/store/modules/helpOrders/actions';
+
 import AnswerDialog from './AnswerDialog';
 
 export default function HelpOrders() {
-  const [data, setData] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(-1);
+  const dispatch = useDispatch();
+  const helpOrders = useSelector(state => state.helpOrders.helpOrders);
 
   useEffect(() => {
-    setData([
-      { Id: 0, Name: 'Lennert Nijenbijvank' },
-      { Id: 1, Name: 'Sebastian Westergren' },
-      { Id: 2, Name: 'Shen Zhi' },
-    ]);
-  }, []);
+    dispatch(getHelpOrdersRequest());
+  }, [dispatch]);
+
+  const getQuestion = id => {
+    const helpOrder = helpOrders.find(h => h.id === id);
+    if (helpOrder) return helpOrder.question;
+    return '';
+  };
+
+  const getHelpOrderId = id => {
+    const helpOrder = helpOrders.find(h => h.id === id);
+    if (helpOrder) return helpOrder.id;
+    return -1;
+  };
 
   return (
     <>
-      {openDialog && (
+      {selectedOrder !== -1 && (
         <>
-          <DialogContainer onClick={() => setOpenDialog(false)} />
+          <DialogContainer onClick={() => setSelectedOrder(-1)} />
           <AnswerDialog
-            question="Olá pessoal da academia, gostaria de saber se quando
-acordar devo ingerir batata doce e frango logo de
-primeira, preparar as marmitas e lotar a geladeira?
-Dou um pico de insulina e jogo o hipercalórico?"
+            question={getQuestion(selectedOrder)}
+            id={getHelpOrderId(selectedOrder)}
+            onClose={() => setSelectedOrder(-1)}
           />
         </>
       )}
@@ -38,12 +49,12 @@ Dou um pico de insulina e jogo o hipercalórico?"
         <Table
           route="help_orders"
           headers={[
-            { Id: 0, Name: 'Aluno' },
-            { Id: 1, Name: '' },
+            { Id: 0, Title: 'Aluno', Field: 'name' },
+            { Id: 1, Title: '' },
           ]}
-          data={data}
+          data={helpOrders}
           isHelpOrdersTable
-          onClickAnswer={() => setOpenDialog(true)}
+          onClickAnswer={id => setSelectedOrder(id)}
         />
       </Container>
     </>
